@@ -1,12 +1,34 @@
-import { createStore } from 'vuex'
+import { createStore, createLogger } from 'vuex'
 
-export default createStore({
-  state: {
+import auth from './modules/auth.module'
+import products from './modules/products.module'
+import cart from './modules/cart.module'
+
+const plugins = []
+
+if (process.env.NODE_ENV === 'development') {
+  plugins.push(createLogger())
+}
+
+const store = createStore({
+  state() {
+    return {
+    }
+  },
+  getters: {
+
   },
   mutations: {
   },
   actions: {
   },
   modules: {
-  }
+    auth,
+    products,
+    cart
+  },
+  plugins
 })
+
+
+export default store
