@@ -10,7 +10,7 @@
           Корзина
         </router-link>
       </li>
-      <li>
+      <li v-if="isAuth">
         <a href="#" @click.prevent="logout">Выход</a>
       </li>
     </ul>
@@ -26,12 +26,13 @@ export default {
   setup() {
     const store = useStore()
     const router = useRouter()
-
+    const isAuth = computed(() => store.getters['auth/isAuthorized'])
     return {
       logout: () => {
         store.dispatch('auth/removeToken')
         router.push('/auth')
       },
+      isAuth
     }
   }
 }

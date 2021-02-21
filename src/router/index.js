@@ -55,7 +55,7 @@ router.beforeEach((to, from, next) => {
     next() //если требуется авторизация и пользователь авторизован => разрешаем переход на след страницы
   }
   else if (requireAuth && !store.getters['auth/isAuthorized']) {
-    next({ path: '/auth' })
+    next()
   }
   else if(store.getters['auth/isAuthorized'] && !requireAuth) {
     next({ path: '/' })
