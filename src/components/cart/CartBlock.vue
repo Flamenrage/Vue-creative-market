@@ -25,7 +25,6 @@
 import { useCart } from '@/use/cart'
 import { currency } from '@/utils/currency'
 export default {
-  name: 'CartTable',
   props: {
     items: {
       type: Array,

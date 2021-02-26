@@ -1,6 +1,6 @@
 <template>
-  <p class="text-right"><strong>Итоговая сумма: {{ currency(total) }}</strong></p>
-</template>
+  <p class="text-right"><strong>Стоимость заказа: {{ currency(total) }}</strong></p>
+</template>            
 
 <script>
 import {currency} from '@/utils/currency'

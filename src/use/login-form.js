@@ -40,7 +40,7 @@ export function useLoginForm() {
     const onSubmit = handleSubmit(async values => {
         try {
              await store.dispatch('auth/login', values) //асинхронная авторизация
-             await router.push('/')
+             await router.push('/admin')
         } catch (e) {
             const message = e.toString().replace("Error: ", "")
             await Swal.fire({

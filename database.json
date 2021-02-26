@@ -2,7 +2,7 @@
   "products": [
     {
       "id": "1",
-      "count": 13,
+      "count": 18,
       "title": "Яблоко",
       "category": "fruit",
       "price": 99,
@@ -199,6 +199,22 @@
       "category": "berries",
       "price": 139,
       "img": "https://images.grocery.yandex.net/2783132/4e13bf22837b45b59fd4b3e611d5fedf/300x300.png"
+    },
+    {
+      "title": "Молодая морковь",
+      "img": "https://www.freshdirect.com/media/images/product/veg_1/veg_pid_2301828_z.jpg?lastModify=2014-12-15",
+      "price": 90,
+      "count": 5,
+      "category": "vegetable",
+      "id": "3Zjzkwn"
+    },
+    {
+      "title": "Французская выпечка",
+      "img": "https://www.freshdirect.com/media/images/product/bakery_2/roll_multigrn_z.jpg?lastModify=2020-07-21",
+      "price": 100,
+      "count": 10,
+      "category": "bakery",
+      "id": "hajZlSF"
     }
   ],
   "categories": [
@@ -231,6 +247,11 @@
       "type": "berries",
       "title": "Ягоды",
       "id": "6"
+    },
+    {
+      "title": "Выпечка",
+      "type": "bakery",
+      "id": "0haxshz"
     }
   ],
   "cart": [
@@ -273,6 +294,30 @@
       "category": "berries",
       "price": 249,
       "img": "https://images.grocery.yandex.net/2756334/569d8814c1e548b0b4945e7bc4cd912a/300x300.png"
+    },
+    {
+      "id": "2",
+      "count": 3,
+      "title": "Груша",
+      "category": "fruit",
+      "price": 159,
+      "img": "https://images.grocery.yandex.net/2805921/631c3a283a994a80820c216ec51f139d/300x300.png"
+    },
+    {
+      "id": "6",
+      "count": 3,
+      "title": "Помидоры",
+      "category": "vegetable",
+      "price": 129,
+      "img": "https://images.grocery.yandex.net/2756334/e97aaa365384455c84dbfa3691c330f1/300x300.png"
+    },
+    {
+      "id": "3",
+      "count": 14,
+      "title": "Апельсин",
+      "category": "fruit",
+      "price": 149,
+      "img": "https://stockmeier-food.ru/wp-content/uploads/2019/07/apelsin.jpg"
     }
   ]
 }

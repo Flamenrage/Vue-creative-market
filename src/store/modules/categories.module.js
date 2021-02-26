@@ -4,44 +4,43 @@ export default {
     namespaced: true,
     state() {
         return {
-            products: []
+            categories: []
         }
     },
     getters: {
         items(state) {
-            return state.products
+            return state.categories
         }
     },
     mutations: {
         load(state, payload) {
-            state.products = payload
+            state.categories = payload
         },
         add(state, payload) {
-            const index = state.products.findIndex(item => item.id === payload.id)
-
-            if (index === -1) {
-                state.products.push(payload)
+            const idx = state.categories.findIndex(item => item.id === payload.id)
+            if (idx === -1) {
+                state.categories.push(payload)
             }
         },
         update(state, payload) {
-            const index = state.products.findIndex(item => item.id === payload.id)
+            const index = state.categories.findIndex(item => item.id === payload.id)
 
             if (index !== -1) {
-                state.products[index] = payload
+                state.categories[index] = payload
             }
         },
         remove(state, id) {
-            const index = state.products.findIndex(item => item.id === id)
+            const index = state.categories.findIndex(item => item.id === id)
 
             if (index !== -1) {
-                state.products.splice(index, 1)
+                state.categories.splice(index, 1)
             }
         }
     },
     actions: {
         async load({ commit }) {
             try {
-                const { data } = await dbAxios.get('/products')
+                const { data } = await dbAxios.get('/categories')
 
                 commit('load', data)
             } catch(e) {
@@ -50,7 +49,7 @@ export default {
         },
         async add({ commit }, payload) {
             try {
-                const { data } = await dbAxios.post(`/products`, payload)
+                const { data } = await dbAxios.post(`/categories`, payload)
 
                 commit('add', data)
             } catch(e) {
@@ -61,7 +60,7 @@ export default {
             const { id } = payload
 
             try {
-                const { data } = await dbAxios.patch(`/products/${id}`, payload)
+                const { data } = await dbAxios.patch(`/categories/${id}`, payload)
                 commit('update', data)
             } catch(e) {
                 console.log(e)
@@ -69,7 +68,7 @@ export default {
         },
         async remove({ commit }, id) {
             try {
-                await dbAxios.delete(`/products/${id}`)
+                await dbAxios.delete(`/categories/${id}`)
 
                 commit('remove', id)
             } catch(e) {

@@ -1,45 +1,69 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store'
 
-const routes = [
-  {
-    path: '/',
-    name: 'Shop',
-    meta: {
-      layout: 'main',
-      auth: true
-    },
-    component: () => import('../views/Shop.vue'),
-  },
-  {
-    path: '/auth',
-    name: 'Auth',
-    meta: {
-      layout: 'auth',
-      auth: false
-    },
-    component: () => import(/* webpackChunkName: "auth" */ '../views/Auth.vue')
-  },
-  {
-    path: '/product/:id',
-    name: 'Product',
-    meta: {
-      layout: 'main',
-      auth: true
-    },
-    component: () => import(/* webpackChunkName: "product" */ '../views/Product')
-  },
-  {
-    path: '/cart',
-    name: 'Cart',
-    meta: {
-      layout: 'main',
-      auth: true
-    },
-    component: () => import(/* webpackChunkName: "cart" */ '../views/Cart')
-  }
-]
+import Shop from '@/views/Shop'
+import Product from '@/views/Product'
+import Cart from '@/views/Cart'
+import Auth from '@/views/Auth'
 
+const routes = [{
+  path: '/',
+  name: 'Shop',
+  component: Shop,
+  meta: {
+    layout: 'main'
+  }
+}, {
+  path: '/product/:id',
+  name: 'Product',
+  component: Product,
+  meta: {
+    layout: 'main'
+  }
+}, {
+  path: '/cart',
+  name: 'Cart',
+  component: Cart,
+  meta: {
+    layout: 'main'
+  }
+}, {
+  path: '/auth',
+  name: 'Auth',
+  component: Auth,
+  meta: {
+    layout: 'auth',
+    sign: true
+  }
+}, {
+  path: '/admin',
+  name: 'Admin',
+  component: () => import(/* webpackChunkName: "admin" */'@/views/Admin.vue'),
+  meta: {
+    layout: 'admin',
+    auth: true
+  },
+  children: [{
+    path: '',
+    component: () => import(/* webpackChunkName: "admin" */'@/views/admin/Home.vue')
+  }, {
+    path: 'products',
+    component: () => import(/* webpackChunkName: "admin" */'@/views/admin/Products.vue')
+  }, {
+    path: 'products/:id',
+    component: () => import(/* webpackChunkName: "admin" */'@/views/admin/Product.vue')
+  }, {
+    path: 'categories',
+    component: () => import(/* webpackChunkName: "admin" */'@/views/admin/Categories.vue')
+  }, {
+    path: 'categories/:id',
+    component: () => import(/* webpackChunkName: "admin" */'@/views/admin/Category.vue')
+  }]
+}, {
+  path: '/:notFound(.*)',
+  name: '404',
+  redirect: '/'
+}]
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
@@ -49,16 +73,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requireAuth = to.meta.auth
-  console.log(requireAuth)
-  console.log(store.getters['auth/isAuthorized'])
+  const signPage = to.meta.sign
   if(requireAuth && store.getters['auth/isAuthorized']){
     next() //если требуется авторизация и пользователь авторизован => разрешаем переход на след страницы
   }
   else if (requireAuth && !store.getters['auth/isAuthorized']) {
     next()
   }
-  else if(store.getters['auth/isAuthorized'] && !requireAuth) {
-    next({ path: '/' })
+  else if(store.getters['auth/isAuthorized'] && signPage) {
+   next({ path: '/' })
+   // next()
   }
   else {
     next()

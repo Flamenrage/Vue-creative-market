@@ -1,5 +1,8 @@
-const formatter = new Intl.NumberFormat('ru-RU', {currency: 'RUB', style: 'currency'})
+const formatter = new Intl.NumberFormat('ru-RU', {
+    currency: 'RUB',
+    style: 'currency',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+})
 
-export function currency(value) {
-    return formatter.format(value)
-}
+export const currency = value => formatter.format(value)
