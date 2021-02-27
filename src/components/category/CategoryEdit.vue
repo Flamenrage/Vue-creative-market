@@ -10,7 +10,8 @@
         <input type="text" id="type" v-model="type">
       </div>
     </div>
-      <button class="btn primary" :disabled="!isValid" @click="onSubmit">{{id ? 'Сохранить' : 'Добавить'}}</button>
+    <button class="btn primary" v-if="id" :disabled="!isValid || !hasChanges" @click="onUpdate">Сохранить</button>
+    <button class="btn primary" v-else :disabled="!isValid" @click="onCreate">Добавить</button>
       <small v-if="!isValid">Заполните все поля корректными значениями</small>
   </form>
 </template>
@@ -41,19 +42,24 @@ export default {
     const isValid = computed(() =>
         title.value && type.value
     )
-    const onSubmit = async () => {
+    const hasChanges = computed(() => {
+      return !!((route.params.id) && (category.value.title !== title.value ||
+          category.value.type !== type.value));
+    })
+    const onCreate = async () => {
       const item = {
         title: title.value,
         type: type.value
       }
-      if (id) {
-        await update({
-          id,
-          ...item
-        })
-      } else {
-        await add(item)
+      await add(item)
+      emit('action')
+    }
+    const onUpdate = async () => {
+      const item = {
+        title: title.value,
+        type: type.value
       }
+      await update({id, ...item})
       emit('action')
     }
     return {
@@ -61,8 +67,7 @@ export default {
       categories,
       title,
       type,
-      isValid,
-      onSubmit
+      onCreate,onUpdate, isValid, hasChanges
     }
   }
 }

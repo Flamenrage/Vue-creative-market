@@ -28,8 +28,9 @@
         </select>
       </div>
     </div>
-      <button class="btn primary" :disabled="!isValid" @click="onSubmit">{{id ? 'Сохранить' : 'Добавить'}}</button>
-      <small v-if="!isValid">Заполните все поля корректными значениями</small>
+    <button class="btn primary" v-if="id" :disabled="!isValid || !hasChanges" @click="onUpdate">Сохранить</button>
+    <button class="btn primary" v-else :disabled="!isValid" @click="onCreate">Добавить</button>
+    <small v-if="!isValid">Заполните все поля корректными значениями</small>
   </form>
 </template>
 <script>
@@ -62,7 +63,15 @@ export default {
     const price = ref(id ? product.value.price : '')
     const count = ref(id ? product.value.count : '')
     const category = ref(id ? product.value.category : '')
-    const onSubmit = async () => {
+    const hasChanges = computed(() => {
+      return !!((route.params.id) && (product.value.title !== title.value ||
+          product.value.img !== img.value ||
+          product.value.price !== Number(price.value) ||
+          product.value.count !== Number(count.value) ||
+          product.value.category !== category.value));
+    })
+
+    const onCreate = async () => {
       const item = {
         title: title.value,
         img: img.value,
@@ -70,19 +79,22 @@ export default {
         count: Number(count.value),
         category: category.value
       }
-
-      if (id) {
-        await update({
-          id,
-          ...item
-        })
-      } else {
-        await add(item)
+      await add(item)
+      emit('action')
+    }
+    const onUpdate = async () => {
+      const item = {
+        title: title.value,
+        img: img.value,
+        price: Number(price.value),
+        count: Number(count.value),
+        category: category.value
       }
+      await update({id, ...item})
       emit('action')
     }
     const isValid = computed(() =>
-        title.value && img.value && price.value > 0 && count.value > 0
+        title.value && img.value && price.value > 0 && count.value > 0 && category.value
     )
 
     return {
@@ -93,7 +105,7 @@ export default {
       price,
       count,
       category,
-      onSubmit, isValid
+      onCreate,onUpdate, isValid, hasChanges
     }
   }
 }
