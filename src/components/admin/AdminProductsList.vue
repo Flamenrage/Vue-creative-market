@@ -12,8 +12,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="(product, i) in products" :key="product.id">
-      <td>{{ i + 1 }}</td>
+    <tr v-for="(product, i) in pages[active_page]" :key="product.id">
+      <td>{{ index(i) }}</td>
       <td>{{ product.title }}</td>
       <td>
         <img :src="product.img" :alt="product.title">
@@ -29,6 +29,13 @@
     </tr>
     </tbody>
   </table>
+  <app-pagination
+      :items="pages"
+      :page="active_page"
+      @to="to"
+      @next="next"
+      @prev="prev"
+  />
   <teleport to="body">
     <app-confirm  v-if="confirm"
                   title="Вы уверены, что хотите удалить данный товар?"
@@ -43,9 +50,15 @@
 import { useProducts } from '@/use/products'
 import AppConfirm from "@/components/ui/AppConfirm";
 import {ref} from "vue";
+import chunk from 'lodash.chunk'
+import {computed} from "vue";
+import {onMounted, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import AppPagination from "@/components/ui/AppPagination";
+import {usePagination} from "@/use/pagination";
 
 export default {
-  components: {AppConfirm},
+  components: {AppConfirm, AppPagination},
   setup() {
     const id = ref(null)
     const {
@@ -56,14 +69,17 @@ export default {
       edit,
       remove
     } = useProducts()
-    return {
+
+
+     return {
       products,
       category,
       price,
       open,
       edit,
-      remove, id, confirm: ref(false)
-    }
+      remove, id, confirm: ref(false),
+       ...usePagination(products)
+     }
   }
 }
 </script>

@@ -1,11 +1,11 @@
 <template>
   <nav class="navbar">
     <h3>
-      <RouterLink to="/admin">  <img src="../../assets/images/logo.png" class="navbar-logo"> </RouterLink>
+      <RouterLink to="/admin"><img src="../../assets/images/logo.png" class="navbar-logo"></RouterLink>
     </h3>
     <ul class="navbar-menu">
       <li>
-        <RouterLink to="/admin/products">Продукты </RouterLink>
+        <RouterLink to="/admin/products">Продукты</RouterLink>
       </li>
       <li>
         <RouterLink to="/admin/categories">Категории</RouterLink>
@@ -21,7 +21,8 @@
 </template>
 
 <script>
-import { useAuth } from '@/use/auth'
+import {useAuth} from '@/use/auth'
+
 export default {
   setup() {
     const {

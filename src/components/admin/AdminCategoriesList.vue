@@ -10,8 +10,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="(category, i) in categories" :key="category.id">
-      <td>{{ i + 1 }}</td>
+    <tr v-for="(category, i) in pages[active_page]" :key="category.id">
+      <td>{{ index(i) }}</td>
       <td>{{ category.title }}</td>
       <td>{{ category.type }}</td>
       <td>{{ productsTotal(category) }}</td>
@@ -23,6 +23,13 @@
     </tr>
     </tbody>
   </table>
+  <app-pagination
+      :items="pages"
+      :page="active_page"
+      @to="to"
+      @next="next"
+      @prev="prev"
+  />
   <teleport to="body">
       <app-confirm  v-if="confirm"
                     title="Вы уверены, что хотите удалить категорию?"
@@ -37,9 +44,12 @@
 import {useCategories} from '@/use/categories'
 import AppConfirm from "@/components/ui/AppConfirm";
 import {ref} from 'vue';
+import {usePagination} from "@/use/pagination";
+import {onMounted, watch} from "vue";
+import AppPagination from "@/components/ui/AppPagination";
 
 export default {
-  components: {AppConfirm},
+  components: {AppConfirm, AppPagination},
   setup() {
     const id = ref(null)
     const {
@@ -58,7 +68,9 @@ export default {
       edit,
       remove,
       confirm: ref(false),
-      id
+      id,
+      ...usePagination(categories)
+
     }
   }
 }

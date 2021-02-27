@@ -1,5 +1,5 @@
 <template>
-  <div v-if="products" class="products-table">
+  <div v-if="products.length" class="products-table">
     <product-card
         v-for="product in products"
         :key="product.id"

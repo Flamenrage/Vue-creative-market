@@ -31,7 +31,7 @@ export function useCategories() {
     const update = async item => {
         await store.dispatch('categories/update', item)
 
-        router.push('/admin/categories')
+        router.go(-1)
     }
 
     const remove = async ( id ) => {
