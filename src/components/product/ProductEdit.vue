@@ -32,13 +32,22 @@
     <button class="btn primary" v-else :disabled="!isValid" @click="onCreate">Добавить</button>
     <small v-if="!isValid">Заполните все поля корректными значениями</small>
   </form>
+  <teleport to="body">
+    <app-confirm
+        v-if="leave"
+        title="Есть несохраненные изменения. Вы хотите покинуть страницу?"
+        @reject="leave = false"
+        @confirm="navigate" />
+  </teleport>
 </template>
 <script>
 
 import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, onBeforeRouteLeave } from 'vue-router'
 import { useProducts } from '@/use/products'
 import { useCategories } from '@/use/categories'
+import AppConfirm from "@/components/ui/AppConfirm";
+import {useLeaveGuard} from "@/use/leave-guard";
 export default {
   props: {
     action: {
@@ -46,6 +55,7 @@ export default {
     }
   },
   emits: ['action'],
+  components:{AppConfirm},
   setup(_, { emit }) {
     const route = useRoute()
     const {
@@ -105,7 +115,10 @@ export default {
       price,
       count,
       category,
-      onCreate,onUpdate, isValid, hasChanges
+      onCreate,onUpdate,
+      isValid, hasChanges,
+      ...useLeaveGuard(hasChanges)
+
     }
   }
 }

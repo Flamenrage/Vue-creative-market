@@ -34,7 +34,7 @@ export function useCategories() {
         router.push('/admin/categories')
     }
 
-    const remove = async ({ id }) => {
+    const remove = async ( id ) => {
         if (activeItems.value.find(item => item.id === id)) {
             await Swal.fire({
                 title: 'Ошибка',

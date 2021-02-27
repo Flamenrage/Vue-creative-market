@@ -1,6 +1,6 @@
 <template>
   <app-content title="Войти в систему">
-    <form @submit.prevent="onCreate">
+    <form @submit.prevent>
       <div class="form-control" :class="['form-control', {invalid: eError}]">
         <label for="email"> Email </label>
         <input type="email" id="email" class="type" v-model="email" @blur="eBlur">

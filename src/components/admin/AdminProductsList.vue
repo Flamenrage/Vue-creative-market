@@ -24,19 +24,30 @@
       <td>
         <button class="btn" @click="open(product)">Посмотреть</button>
         <button class="btn primary" @click="edit(product)">Изменить</button>
-        <button class="btn danger" @click="remove(product)">Удалить</button>
+        <button class="btn danger" @click="confirm = true, id = product.id">Удалить</button>
       </td>
     </tr>
     </tbody>
   </table>
+  <teleport to="body">
+    <app-confirm  v-if="confirm"
+                  title="Вы уверены, что хотите удалить данный товар?"
+                  @reject="confirm = false"
+                  @confirm="remove(id),confirm = false">
+      <p>Текущий товар будет удален</p>
+    </app-confirm>
+  </teleport>
 </template>
 
 <script>
 import { useProducts } from '@/use/products'
+import AppConfirm from "@/components/ui/AppConfirm";
+import {ref} from "vue";
 
 export default {
-
+  components: {AppConfirm},
   setup() {
+    const id = ref(null)
     const {
       items: products,
       category,
@@ -51,7 +62,7 @@ export default {
       price,
       open,
       edit,
-      remove
+      remove, id, confirm: ref(false)
     }
   }
 }

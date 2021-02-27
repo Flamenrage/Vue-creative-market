@@ -52,7 +52,7 @@ export function useProducts() {
         router.push('/admin/products')
     }
 
-    const remove = async ({ id }) => await store.dispatch('products/remove', id)
+    const remove = async ( id ) => await store.dispatch('products/remove', id)
 
     watch(filter, () => {
         const query = {}
