@@ -104,7 +104,7 @@ export default {
       emit('action')
     }
     const isValid = computed(() =>
-        title.value && img.value && price.value > 0 && count.value > 0 && category.value
+        title.value && img.value && price.value > 0 && count.value >-1 && category.value
     )
 
     return {

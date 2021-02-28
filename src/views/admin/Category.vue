@@ -7,7 +7,7 @@
 
 <script>
 import AppContent from '@/components/ui/AppContent'
-import CategoryEdit from '@/components/category/CategoryEdit'
+import CategoryEdit from '@/components/admin/categories/CategoryEdit'
 export default {
   components: { CategoryEdit, AppContent }
 }

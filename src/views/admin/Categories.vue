@@ -13,9 +13,9 @@
 <script>
 import { ref } from 'vue'
 import AppContent from '@/components/ui/AppContent'
-import AdminCategoriesList from '@/components/admin/AdminCategoriesList'
+import AdminCategoriesList from '@/components/admin/categories/AdminCategoriesList'
 import AppModal from '@/components/ui/AppModal'
-import CategoryEdit from '@/components/category/CategoryEdit'
+import CategoryEdit from '@/components/admin/categories/CategoryEdit'
 export default {
   components: { CategoryEdit, AppModal, AdminCategoriesList, AppContent },
   setup() {

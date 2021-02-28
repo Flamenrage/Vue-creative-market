@@ -13,16 +13,13 @@ export function useCart() {
         return item ? item.count : 0 // получаем его количество
     })
 
-    const load = async() => await store.dispatch('cart/load')
+    const add = item => store.commit('cart/add', item)
 
-    const add = async item => {
-        await store.dispatch('cart/add', item)
-    }
-    const up = async item => {
+    const up =  item => {
         const { id } = item //из объекта item достаем id
 
         if (items.value.findIndex(item => item.id === id) === -1) {
-            await add({
+             add({
                 ...item,
                 count: 0
             }) //если в корзине нет товара с таким id, помещаем его туда
@@ -30,13 +27,13 @@ export function useCart() {
 
         const count = items.value.find(item => item.id === id).count //количество продукта в корзине
 
-        await store.dispatch('cart/update', { //обновляем корзину
+         store.commit('cart/update', { //обновляем корзину
             ...item,
             count: count + 1
         })
     }
 
-    const decr = async item => {
+    const decr =  item => {
         const { id } = item
 
         if (items.value.findIndex(item => item.id === id) === -1) {
@@ -45,7 +42,7 @@ export function useCart() {
 
         const count = items.value.find(item => item.id === id).count
 
-        await store.dispatch('cart/update', {
+         store.commit('cart/update', {
             ...item,
             count: count - 1
         })
@@ -62,6 +59,5 @@ export function useCart() {
         up,
         decr,
         get,
-        load
     }
 }

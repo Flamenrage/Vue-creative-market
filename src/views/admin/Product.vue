@@ -6,7 +6,7 @@
 
 <script>
 import AppContent from '@/components/ui/AppContent'
-import ProductEdit from '@/components/product/ProductEdit'
+import ProductEdit from '@/components/admin/products/ProductEdit'
 export default {
   components: { ProductEdit, AppContent }
 }

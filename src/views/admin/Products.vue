@@ -3,7 +3,8 @@
     <template #header>
       <button class="btn primary" @click="modalIsOpen = true">Добавить</button>
     </template>
-    <admin-products-list />
+    <admin-product-filter v-model:filter="filter" />
+    <admin-products-list :items="products" />
     <app-modal title="Добавить товар" @close="modalIsOpen = false" v-if="modalIsOpen">
       <product-edit @action="modalIsOpen = false" />
     </app-modal>
@@ -13,14 +14,22 @@
 <script>
 import { ref } from 'vue'
 import AppContent from '@/components/ui/AppContent'
-import AdminProductsList from '@/components/admin/AdminProductsList'
+import AdminProductsList from '@/components/admin/products/AdminProductsList'
 import AppModal from '@/components/ui/AppModal'
-import ProductEdit from '@/components/product/ProductEdit'
+import ProductEdit from '@/components/admin/products/ProductEdit'
+import AdminProductFilter from "@/components/admin/products/AdminProductFilter";
+import {useProducts} from "@/use/products";
 export default {
-  components: { ProductEdit, AppModal, AdminProductsList, AppContent },
+  components: {AdminProductFilter, ProductEdit, AppModal, AdminProductsList, AppContent },
   setup() {
     const modalIsOpen = ref()
+    const {
+      items: products,
+      filter
+    } = useProducts()
+
     return {
+      products,filter,
       modalIsOpen
     }
   }

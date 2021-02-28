@@ -1,5 +1,5 @@
 <template>
-  <table class="table">
+  <table class="table" v-if="products.length">
     <thead>
     <tr>
       <th>#</th>
@@ -29,6 +29,7 @@
     </tr>
     </tbody>
   </table>
+  <p v-else>Ничего не найдено.</p>
   <app-pagination
       :items="pages"
       :page="active_page"
@@ -59,19 +60,21 @@ import {usePagination} from "@/use/pagination";
 
 export default {
   components: {AppConfirm, AppPagination},
-  setup() {
+  props: {
+    items: Array
+  },
+  setup(props) {
     const id = ref(null)
     const {
-      items: products,
       category,
       price,
       open,
       edit,
       remove
     } = useProducts()
+    const products = computed(() => props.items)
 
-
-     return {
+    return {
       products,
       category,
       price,

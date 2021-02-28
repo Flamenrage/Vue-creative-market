@@ -1,4 +1,6 @@
 import dbAxios from '@/axios/db'
+import {transform} from "@/use/transform";
+import store from '@/store'
 
 export default {
     namespaced: true,
@@ -41,35 +43,42 @@ export default {
     actions: {
         async load({ commit }) {
             try {
-                const { data } = await dbAxios.get('/products')
+                const { data } = await dbAxios.get(`/products.json`)
 
-                commit('load', data)
+                commit('load', transform(data))
             } catch(e) {
                 console.log(e)
             }
         },
         async add({ commit }, payload) {
             try {
-                const { data } = await dbAxios.post(`/products`, payload)
+                const token = store.getters['auth/token']
+                const { data } = await dbAxios.post(`/products.json?auth=${token}`, payload)
 
-                commit('add', data)
+                commit('add', {
+                    ...payload,
+                    id: data.name
+                })
             } catch(e) {
                 console.log(e)
             }
         },
         async update({ commit }, payload) {
-            const { id } = payload
+            const { id, ...item } = payload
 
             try {
-                const { data } = await dbAxios.patch(`/products/${id}`, payload)
-                commit('update', data)
+                const token = store.getters['auth/token']
+                await dbAxios.put(`/products/${id}.json?auth=${token}`, item)
+
+                commit('update', payload)
             } catch(e) {
                 console.log(e)
             }
         },
         async remove({ commit }, id) {
             try {
-                await dbAxios.delete(`/products/${id}`)
+                const token = store.getters['auth/token']
+                await dbAxios.delete(`/products/${id}.json?auth=${token}`)
 
                 commit('remove', id)
             } catch(e) {

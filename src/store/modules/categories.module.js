@@ -1,5 +1,6 @@
 import dbAxios from '@/axios/db'
-
+import {transform} from "@/use/transform";
+import store from '@/store'
 export default {
     namespaced: true,
     state() {
@@ -40,35 +41,42 @@ export default {
     actions: {
         async load({ commit }) {
             try {
-                const { data } = await dbAxios.get('/categories')
+                const { data } = await dbAxios.get(`/categories.json`)
 
-                commit('load', data)
+                commit('load', transform(data)) //transform только для работы с FB из-за определенного формата данных
             } catch(e) {
                 console.log(e)
             }
         },
         async add({ commit }, payload) {
             try {
-                const { data } = await dbAxios.post(`/categories`, payload)
+                const token = store.getters['auth/token']
+                const { data } = await dbAxios.post(`/categories.json?auth=${token}`, payload)
 
-                commit('add', data)
+                commit('add', {
+                    ...payload,
+                    id: data.name
+                })
             } catch(e) {
                 console.log(e)
             }
         },
         async update({ commit }, payload) {
-            const { id } = payload
+            const { id, ...item } = payload
 
             try {
-                const { data } = await dbAxios.patch(`/categories/${id}`, payload)
-                commit('update', data)
+                const token = store.getters['auth/token']
+                await dbAxios.put(`/categories/${id}.json?auth=${token}`, item)
+
+                commit('update', payload)
             } catch(e) {
                 console.log(e)
             }
         },
         async remove({ commit }, id) {
             try {
-                await dbAxios.delete(`/categories/${id}`)
+                const token = store.getters['auth/token']
+                await dbAxios.delete(`/categories/${id}.json?auth=${token}`)
 
                 commit('remove', id)
             } catch(e) {

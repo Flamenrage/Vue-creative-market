@@ -1,10 +1,10 @@
-import dbAxios from '@/axios/db'
+const CART_KEY = process.env.VUE_APP_CART_KEY
 
 export default {
     namespaced: true,
     state() {
         return {
-            cart: []
+            cart: JSON.parse(localStorage.getItem(CART_KEY)) || []
         }
     },
     getters: {
@@ -13,14 +13,12 @@ export default {
         }
     },
     mutations: {
-        load(state, payload) {
-            state.cart = payload
-        },
         add(state, payload) {
             const index = state.cart.findIndex(item => item.id === payload.id)
 
             if (index === -1) {
                 state.cart.push(payload)
+                localStorage.setItem(CART_KEY, JSON.stringify(state.cart))
             }
         },
         update(state, payload) {
@@ -33,57 +31,19 @@ export default {
                     state.cart.splice(index, 1)
                 }
             }
+            localStorage.setItem(CART_KEY, JSON.stringify(state.cart))
         },
         remove(state, id) {
             const index = state.cart.findIndex(item => item.id === id)
 
             if (index !== -1) {
                 state.cart.splice(index, 1)
-            }
-        }
-    },
-    actions: {
-        async load({ commit }) {
-            try {
-                const { data } = await dbAxios.get('/cart')
-
-                commit('load', data)
-            } catch(e) {
-                console.log(e)
+                localStorage.setItem(CART_KEY, JSON.stringify(state.cart))
             }
         },
-        async add({ commit }, payload) {
-            try {
-                const { data } = await dbAxios.post(`/cart`, payload)
-
-                commit('add', data)
-            } catch(e) {
-                console.log(e)
-            }
-        },
-        async update({ commit }, payload) {
-            const { id } = payload
-
-            try {
-                if (payload.count) {
-                    const { data } = await dbAxios.patch(`/cart/${id}`, payload)
-                    commit('update', data)
-                } else {
-                    await dbAxios.delete(`/cart/${id}`)
-                    commit('remove', id)
-                }
-            } catch(e) {
-                console.log(e)
-            }
-        },
-        async remove({ commit }, id) {
-            try {
-                await dbAxios.delete(`/cart/${id}`)
-
-                commit('remove', id)
-            } catch(e) {
-                console.log(e)
-            }
+        clear(state) {
+            state.cart = []
+            localStorage.setItem(CART_KEY, JSON.stringify([]))
         }
     }
 }

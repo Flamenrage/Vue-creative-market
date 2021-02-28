@@ -11,7 +11,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProducts } from '@/use/products'
 import { useCategories } from '@/use/categories'
-import { useCart } from '@/use/cart'
+//import { useCart } from '@/use/cart'
 import MainLayout from '@/layout/MainLayout'
 import AuthLayout from '@/layout/AuthLayout'
 import AdminLayout from '@/layout/AdminLayout'
@@ -24,13 +24,13 @@ export default {
     const layout = computed(() => route.meta.layout)
     const { load: loadProducts } = useProducts()
     const { load: loadCategories } = useCategories()
-    const { load: loadCart } = useCart()
+   // const { load: loadCart } = useCart()
     const isLoading = ref()
     onMounted(async () => {
       isLoading.value = true
       await loadProducts()
       await loadCategories()
-      await loadCart()
+    //  await loadCart()
       isLoading.value = false
     })
     return {

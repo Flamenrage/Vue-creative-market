@@ -1,5 +1,5 @@
 <template>
-  <ul class="pagination">
+  <ul class="pagination" v-if="items.length > 1">
     <li class="pagination-item">
       <button class="btn" @click="$emit('prev')" :disabled="!page">&lt;</button>
     </li>
