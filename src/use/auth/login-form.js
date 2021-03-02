@@ -3,7 +3,7 @@ import * as yup from "yup";
 import {computed} from "vue";
 import {watch} from "vue";
 import {useStore} from "vuex";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {ref} from "vue";
 import Swal from 'sweetalert2'
 
@@ -12,6 +12,7 @@ export function useLoginForm() {
 
     const store = useStore()
     const router = useRouter()
+    const route = useRoute()
 
     const{handleSubmit, isSubmitting, submitCount} = useForm() //handleSubmit - функция обработки сабмита формы, isSubmitting - функция, позволяющая
     // например дизэйблить кнопку во время обработки запроса
@@ -30,6 +31,8 @@ export function useLoginForm() {
     )
     const isTooManyClicks = computed(() => submitCount.value >= 3) //было вызвано событие более трех раз, оборачиваем в computed свойство
 
+    const isAdmin = computed(() => store.getters['auth/isAdmin'])
+
 
     watch(isTooManyClicks, val => { //следим за количеством кликов, если функция вернула true, через некоторое время обновляем кнопку
         if (val){
@@ -39,8 +42,12 @@ export function useLoginForm() {
 
     const onSubmit = handleSubmit(async values => {
         try {
-             await store.dispatch('auth/login', values) //асинхронная авторизация
-             await router.push('/admin')
+
+            await store.dispatch('auth/signIn', values)
+            if (route.path === '/auth') {
+                const path = isAdmin.value ? '/admin' : '/'
+                await router.push(path)
+            }
         } catch (e) {
             const message = e.toString().replace("Error: ", "")
             await Swal.fire({
@@ -50,7 +57,7 @@ export function useLoginForm() {
                 confirmButtonText: 'Хорошо '
             })
         }
-    }) //функция при срабатывании при нажатии на кнопку
+    })
 
     return{
         email,

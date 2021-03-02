@@ -11,7 +11,7 @@
         <RouterLink to="/admin/categories">Категории</RouterLink>
       </li>
       <li>
-        <RouterLink to="/">Магазин</RouterLink>
+        <RouterLink to="/admin/users">Пользователи</RouterLink>
       </li>
       <li>
         <a @click="logout">Выйти</a>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {useAuth} from '@/use/auth'
+import { useAuth } from '@/use/auth/auth-info'
 
 export default {
   setup() {

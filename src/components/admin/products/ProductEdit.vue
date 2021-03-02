@@ -30,7 +30,6 @@
     </div>
     <button class="btn primary" v-if="id" :disabled="!isValid || !hasChanges" @click="onUpdate">Сохранить</button>
     <button class="btn primary" v-else :disabled="!isValid" @click="onCreate">Добавить</button>
-    <small v-if="!isValid">Заполните все поля корректными значениями</small>
   </form>
   <teleport to="body">
     <app-confirm

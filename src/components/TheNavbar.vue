@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" v-if="!isAdmin">
     <h3>
       <RouterLink to="/">
         <img src="../assets/images/logo.png" class="navbar-logo">
@@ -12,8 +12,8 @@
       <li>
         <RouterLink to="/cart">Корзина <i v-if="cartCount">{{ cartCount }}</i></RouterLink>
       </li>
-      <li v-if="isAuthorized">
-        <RouterLink to="/admin">В админку</RouterLink>
+      <li v-if="!isAuthorized">
+        <RouterLink to="/auth">Войти</RouterLink>
       </li>
       <li v-if="isAuthorized">
         <a @click="logout">Выйти</a>
@@ -24,19 +24,19 @@
 
 <script>
 import { useCart } from '@/use/cart'
-import { useAuth } from '@/use/auth'
+import { useAuth } from '@/use/auth/auth-info'
 export default {
   name: 'TheNavbar',
   setup() {
     const { count: cartCount } = useCart()
     const {
       isAuthorized,
-      logout
+      logout, isAdmin
     } = useAuth()
     return {
       cartCount,
       isAuthorized,
-      logout
+      logout, isAdmin
     }
   }
 }
