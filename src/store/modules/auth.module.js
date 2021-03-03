@@ -2,6 +2,12 @@ import axios from 'axios'
 import { error } from '@/utils/error'
 const TOKEN_KEY = process.env.VUE_APP_TOKEN_KEY
 import store from '@/store'
+const REFRESH_KEY = process.env.VUE_APP_REFRESH_KEY
+const EXPIRES_KEY = process.env.VUE_APP_EXPIRES_KEY
+
+const SIGN_IN_URL = process.env.VUE_APP_SIGN_IN_URL
+const SIGN_UP_URL = process.env.VUE_APP_SIGN_UP_URL
+const REFRESH_URL = process.env.VUE_APP_REFRESH_URL
 const USER_KEY = process.env.VUE_APP_USER_KEY
 
 
@@ -10,13 +16,20 @@ export default {
     state() {
         return {
             token: localStorage.getItem(TOKEN_KEY), //токен
+            refreshToken: localStorage.getItem(REFRESH_KEY),
+            expiresDate: new Date(localStorage.getItem(EXPIRES_KEY)),
             user: JSON.parse(localStorage.getItem(USER_KEY))
         }
     },
     mutations: {
-        setToken(state, token) {
-            state.token = token
-            localStorage.setItem(TOKEN_KEY, token)
+        setToken(state, {refreshToken, idToken, expiresIn = '3600'}) {
+            const expiresDate = new Date(new Date().getTime() + Number(expiresIn) * 1000)
+            state.token = idToken
+            state.refreshToken = refreshToken
+            state.expiresDate = expiresDate
+            localStorage.setItem(TOKEN_KEY, idToken)
+            localStorage.setItem(REFRESH_KEY, refreshToken)
+            localStorage.setItem(EXPIRES_KEY, expiresDate.toString())
         },
         setUser(state, user) {
             state.user = user
@@ -24,9 +37,14 @@ export default {
         },
         logout(state) {
             state.token = null
+            state.refreshToken = null
+            state.expiresDate = null
             state.user = null
-            localStorage.removeItem(TOKEN_KEY)
             localStorage.removeItem(USER_KEY)
+            localStorage.removeItem(TOKEN_KEY)
+            localStorage.removeItem(REFRESH_KEY)
+            localStorage.removeItem(EXPIRES_KEY)
+
         }
     },
     actions: {
@@ -40,9 +58,6 @@ export default {
                 })
                 console.log(data)
 
-                const { idToken: token } = data // достаем токен из данных
-                console.log(token)
-
                 const user = store //обращаемся к хранилищу и ищем пользователя с такой почтой
                     .getters['users/items']
                     .find(user => user.email === payload.email)
@@ -50,7 +65,7 @@ export default {
                 delete user.password //удаляем пароль из полученного пользователя
 
                 commit('setUser', user)
-                commit('setToken', token)
+                commit('setToken', data)
 
             } catch(e) {
                 throw new Error(error(e.response.data.error.message))
@@ -70,8 +85,6 @@ export default {
                     returnSecureToken: true
                 })
 
-                const { idToken: token } = data // достаем токен из данных
-
                 const user = { // создаем объект с новым пользователем
                     ...payload,
                     id: data.name
@@ -80,7 +93,7 @@ export default {
                 delete user.password //удаляем пароль из данных
 
                 commit('setUser', user)
-                commit('setToken', token)
+                commit('setToken', data)
 
                 await dispatch('users/add', user, { // добавляем нового пользователя в БД
                     root: true
@@ -103,6 +116,9 @@ export default {
         },
         isAdmin(state) {
             return state.user ? state.user.role === 'admin' : false
+        },
+        isExpired(state) {
+            return new Date() >= state.expiresDate
         }
     }
 }

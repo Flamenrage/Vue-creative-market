@@ -47,8 +47,7 @@ export default {
         },
         async add({ commit }, payload) {
             try {
-                const token = store.getters['auth/token']
-                const { data } = await dbAxios.post(`/users.json?auth=${token}`, payload)
+                const { data } = await dbAxios.post(`/users.json`, payload)
 
                 commit('add', {...payload, id: data.name})
             } catch(e) {
@@ -59,8 +58,7 @@ export default {
             const { id, ...item } = payload
 
             try {
-                const token = store.getters['auth/token']
-                await dbAxios.put(`/users/${id}.json?auth=${token}`, item)
+                await dbAxios.patch(`/users/${id}.json`, item)
 
                 commit('update', payload)
             } catch(e) {

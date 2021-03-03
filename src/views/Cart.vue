@@ -26,6 +26,7 @@ import AppContent from "@/components/ui/AppContent";
 import {useAuth} from "@/use/auth/auth-info";
 import {useRouter} from "vue-router";
 import {useOrders} from "@/use/orders";
+import {pay} from "@/utils/pay";
 
 export default {
   components: { CartBlock, CartSummary, AppContent},
@@ -40,10 +41,21 @@ export default {
     const { add: addOrder } = useOrders()
     const { isAuthorized, user } = useAuth()
     const makeOrder = async () => {
-      await addOrder({
-        user: user.value,
-        items: items.value
-      })
+      try {
+        await pay({
+          description: 'Покупка товаров в онлайн магазине',
+          amount: total.value,
+          accountId: user.value.email,
+          data: {
+            test: 1
+          }
+        })
+        await addOrder({
+          user: user.value,
+          items: items.value
+        })
+      } catch (e) {
+      }
     }
     return {
       items,

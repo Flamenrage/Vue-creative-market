@@ -5,6 +5,7 @@ import Shop from '@/views/Shop'
 import Product from '@/views/Product'
 import Cart from '@/views/Cart'
 import Auth from '@/views/Auth'
+import Cabinet from "@/views/Cabinet";
 
 const routes = [{
     path: '/',
@@ -35,6 +36,13 @@ const routes = [{
     meta: {
         layout: 'auth',
         sign: true
+    }
+}, {
+    path: '/cabinet',
+    name: 'Cabinet',
+    component: Cabinet,
+    meta: {
+        layout: 'main'
     }
 }, {
     path: '/admin',

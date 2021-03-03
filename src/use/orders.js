@@ -14,7 +14,7 @@ export function useOrders() {
 
     const filter = ref({ status: route.query.status || '' })
     const items = computed(() => store.getters['orders/items']
-        .sort((first, second) => first.date - second.date)  //сортируем по дате
+        .sort((first, second) => second.date - first.date)  //сортируем по дате
         .sort((first, second) => statuses
             .findIndex(status => first.status === status.value) -
             statuses.findIndex(status => second.status === status.value)) //сортируем по статусам
@@ -24,8 +24,6 @@ export function useOrders() {
             }
             return true
         }))
-
-    const userItems = computed((email) => store.getters['orders/items'].filter(user => user.email === email.value))
 
     const load = async () => await store.dispatch('orders/load')
 
