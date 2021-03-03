@@ -5,6 +5,7 @@ import products from './modules/products.module'
 import cart from './modules/cart.module'
 import categories from './modules/categories.module'
 import users from './modules/users.module'
+import orders from './modules/orders.module'
 
 
 const plugins = []
@@ -30,7 +31,8 @@ const store = createStore({
     products,
     categories,
     cart,
-    users
+    users,
+    orders
   },
   plugins
 })

@@ -65,6 +65,9 @@ const routes = [{
     }, {
         path: 'users/:id',
         component: () => import(/* webpackChunkName: "admin" */'@/views/admin/User.vue')
+    }, {
+        component: () => import(/* webpackChunkName: "admin" */'@/views/admin/Orders.vue'),
+        path: 'orders'
     }]
 }, {
     path: '/:notFound(.*)',

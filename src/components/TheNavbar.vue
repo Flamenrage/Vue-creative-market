@@ -15,6 +15,9 @@
       <li v-if="!isAuthorized">
         <RouterLink to="/auth">Войти</RouterLink>
       </li>
+      <li v-if="isAuthorized" class="navbar-user">
+        {{user.name}}
+      </li>
       <li v-if="isAuthorized">
         <a @click="logout">Выйти</a>
       </li>
@@ -23,20 +26,21 @@
 </template>
 
 <script>
-import { useCart } from '@/use/cart'
-import { useAuth } from '@/use/auth/auth-info'
+import {useCart} from '@/use/cart'
+import {useAuth} from '@/use/auth/auth-info'
+
 export default {
   name: 'TheNavbar',
   setup() {
-    const { count: cartCount } = useCart()
+    const {count: cartCount} = useCart()
     const {
       isAuthorized,
-      logout, isAdmin
+      logout, isAdmin, user
     } = useAuth()
     return {
       cartCount,
       isAuthorized,
-      logout, isAdmin
+      logout, isAdmin, user
     }
   }
 }
@@ -48,6 +52,27 @@ export default {
   padding-right: 15px;
   margin-right: 1rem;
 }
+
+.navbar-user {
+  position: relative;
+  font-size: 18px;
+  color: #777;
+  padding-left: 35px;
+}
+
+.navbar-user:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  background-image: url('../assets/images/user.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .navbar li i {
   position: absolute;
   top: -5px;

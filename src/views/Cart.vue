@@ -5,10 +5,12 @@
       <cart-block v-else :items="items" />
       <hr>
       <cart-summary v-if="total" :total="total" />
-      <cart-dynamics v-if="isAuthorized"/>
     </div>
-    <div class="text-center" v-if="!isAuthorized">
-      <h3 v-if="!isAuthorized">Чтобы сделать заказ необходимо авторизоваться</h3>
+    <p class="text-right" v-if="isAuthorized">
+      <button class="btn" @click="makeOrder">Оплатить</button>
+    </p>
+    <div class="text-center" v-if="!isAuthorized && total">
+      <h3>Чтобы сделать заказ необходимо авторизоваться</h3>
       <button class="btn primary" @click="auth">
         Авторизуйтесь
       </button>
@@ -20,26 +22,34 @@
 import { useCart } from '@/use/cart'
 import CartBlock from '@/components/cart/CartBlock'
 import CartSummary from '@/components/cart/CartSummary'
-import CartDynamics from '@/components/cart/CartDynamics'
 import AppContent from "@/components/ui/AppContent";
 import {useAuth} from "@/use/auth/auth-info";
 import {useRouter} from "vue-router";
+import {useOrders} from "@/use/orders";
 
 export default {
-  components: {CartDynamics, CartBlock, CartSummary, AppContent},
+  components: { CartBlock, CartSummary, AppContent},
   setup() {
     const router = useRouter()
     const {
       items,
       total
     } = useCart()
+
     const auth = () => router.push('/auth')
-    const { isAuthorized } = useAuth()
+    const { add: addOrder } = useOrders()
+    const { isAuthorized, user } = useAuth()
+    const makeOrder = async () => {
+      await addOrder({
+        user: user.value,
+        items: items.value
+      })
+    }
     return {
       items,
       total,
       isAuthorized,
-      auth
+      auth, makeOrder
     }
   }
 }
