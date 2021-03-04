@@ -16,7 +16,7 @@
         <RouterLink to="/auth">Войти</RouterLink>
       </li>
       <li v-if="isAuthorized" class="navbar-user">
-        <RouterLink to="/cabinet">{{user.name}}</RouterLink>
+        <RouterLink to="/cabinet">{{user.email}}</RouterLink>
       </li>
       <li v-if="isAuthorized">
         <a @click="logout">Выйти</a>
