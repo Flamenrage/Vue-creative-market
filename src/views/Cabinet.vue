@@ -4,6 +4,7 @@
       v-else
       title="Мои заказы"
   >
+    <div v-if="userOrders">
     <orders-list :items="userOrders" v-model="orderList"/>
     <app-modal title="Список продуктов" @close="orderList = null" v-if="orderList">
       <div class="text-center" v-for="(product, ind) in orderList" :key="product.id">
@@ -11,6 +12,10 @@
         <hr>
       </div>
     </app-modal>
+    </div>
+    <div v-else>
+      <p>Вы пока не оформили ни один заказ! Скорее в магазин :)</p>
+    </div>
   </app-content>
 </template>
 
@@ -37,9 +42,11 @@ export default {
     const isLoading = ref()
     const userOrders = computed(() => store.getters['orders/items']
         .filter(reqArray => {return user.value.id === reqArray.user.id})
+        .sort((first, second) => second.date - first.date)
         .sort((first, second) => statuses
             .findIndex(status => first.status === status.value) -
         statuses.findIndex(status => second.status === status.value))
+
     )
     onMounted(async () => {
       isLoading.value = true

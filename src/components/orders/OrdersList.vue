@@ -20,18 +20,10 @@
       <td>{{ total(order.items) }}</td>
       <td>
         <div class="form-control">
-          <select
+          <input
               :class="order.status"
-              :value="order.status"
-              disabled>
-            <option
-                v-for="status in statuses"
-                :key="status.value"
-                :value="status.value"
-            >
-              {{ status.title }}
-            </option>
-          </select>
+              readonly
+              :placeholder="statusTitle(order.status)[0].title">
         </div>
       </td>
     </tr>
@@ -69,11 +61,14 @@ export default {
       statuses,
       update
     } = useOrders()
-
+    const statusTitle = (item) => {
+      return statuses.filter(status => status.value === item)
+    }
     const orders = computed(() => props.items)
     const total = items => currency(items.reduce((accumulator, current) => accumulator + current.price * current.count, 0))
     return {
       statuses,
+      statusTitle,
       total,
       ...usePagination(orders)
     }
@@ -106,5 +101,8 @@ export default {
 .table tbody td:nth-child(4) {
   font-size: 14px;
   line-height: 1.5;
+}
+input {
+  text-align: center;
 }
 </style>
